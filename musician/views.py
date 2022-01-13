@@ -1,3 +1,16 @@
-from django.shortcuts import render
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
-# Create your views here.
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+
+from django.contrib.auth.models import User
+from . import models
+
+class TestView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permissions_classes = [IsAuthenticated]
+
+    def post(self, req):
+        
+        return Response('success')
