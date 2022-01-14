@@ -29,7 +29,6 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['ba00-django.run.goorm.io']
 
-
 # Application definition
 
 INSTALLED_APPS = [

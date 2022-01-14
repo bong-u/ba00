@@ -1,7 +1,7 @@
 *.log
 __pycache__/
 db.sqlite3
-settings.ini
+.env
 .venv/
 goorm.manifest
 .temp
