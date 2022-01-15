@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Musician
 from .serializers import MusicianSerializer
 
-from .slack import checkNewSong
+from .slack import UpdateMusician
 import requests, json
 
 class UpdateView(APIView):
@@ -16,11 +16,23 @@ class UpdateView(APIView):
     # permissions_classes = [IsAuthenticated]
 
     def post(self, req):
+        
         data = list(Musician.objects.values())
+        obj = UpdateMusician(data)
         
-        checkNewSong(data)
+        obj.SendMessage()
         
-        return Response(data)
+        return Response(obj.getMusicians())
+    
+    def update (musician):
+
+        model = Musician.objects.get(value=musician['value'])
+        serializer = MusicanSerializer(model, data=musician)
+
+        if serializer.is_valid():
+            serializer.save()
+
+        print (serializer.errors)
     
 class MusicianView(APIView):
     
