@@ -2,6 +2,12 @@ import requests
 from decouple import config
 import json
 
+def checkNewSong(musicians):
+    
+    for musician in musicians:
+        print (musician['recent'])
+    
+
 def SendMessage():
     
     headers = {

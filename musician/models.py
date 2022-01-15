@@ -6,3 +6,6 @@ class Musician(models.Model):
     value = models.IntegerField(primary_key=True)
     recent = models.IntegerField()
     image = models.URLField()
+    
+    def __str__(self):
+        return self.name

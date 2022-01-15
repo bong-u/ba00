@@ -1,0 +1,69 @@
+{% load rest_framework %}
+
+<html>
+	<head>
+		<title>Musician Search</title>
+		<meta charset="utf-8">
+		<style>
+			img {
+				object-fit: cover;
+				width : 100px;
+				height: 100px;
+			}
+		</style>
+	</head>
+	
+	<body>
+		
+		<form id="search_form" src="/musician/search/" method="GET">
+			<input type="search" name="q">
+			<input type="submit" value="search">
+		</form>
+		
+		<div id="result_list">
+			{% if result|length != 0 %}
+				{% for item in result %}
+					<div class="item">
+						<img src= {{ item.image }} >
+						{{ item.name }}
+						<button class="addButton" index={{ forloop.counter0 }}>add</button>
+					</div>
+				{% endfor %}
+			
+			{% else %}
+				No Search Result Found.
+			{% endif %}
+		</div>
+		
+	</body>
+</html>
+<script>
+	
+	window.onload = () => {
+		let buttons = document.getElementsByClassName('addButton');
+		
+		if (buttons.length != 0) {
+			for (button of buttons) {
+				button.onclick = addButtonClicked;
+			}
+		}
+	}
+	
+	function addButtonClicked(e) {
+		const result = {{result|safe}}
+		const index = e.target.getAttribute('index');
+		
+		fetch ("/musician/add/", {
+			method: "POST",
+			headers: {'Content-Type': 'application/json'}, 
+			body: JSON.stringify(result[index])
+		})
+		.then (res => {
+			if (res.status == 201)
+				alert ('Musician added successfully.')
+			else
+				alert ('Faild to add musician.')
+			console.log(res);
+		});
+	}
+</script>

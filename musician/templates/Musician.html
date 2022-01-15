@@ -1,0 +1,27 @@
+{% load rest_framework %}
+
+<html>
+	<head>
+		<title>Musician Search</title>
+		<meta charset="utf-8">
+		<style>
+			img {
+				
+  				object-fit: cover;
+				width : 100px;
+				height: 100px;
+				
+			}
+		</style>
+	</head>
+	
+	<body>
+		{% for item in musician %}
+			<div class="item">
+				<img src= {{ item.image }} >
+				{{ item.name }}
+			</div>
+		{% endfor %}
+
+	</body>
+</html>
