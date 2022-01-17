@@ -1,4 +1,4 @@
-import requests, json
+import requests, json, re
 from decouple import config
 
 
@@ -9,11 +9,13 @@ class UpdateMusician:
     
     def __init__(self, musicians):
         self.__checkNewSong(musicians)
-        
     
     def __checkNewSong(self, musicians):
+        
 
         for musician in musicians:
+            
+            needUpdate = False;
 
             res = requests.get('https://www.music-flo.com/api/meta/v1/artist/'+ str(musician['value']) + '/album?sortType=RECENT&size=3&roleType=RELEASE')
 
@@ -25,7 +27,7 @@ class UpdateMusician:
 
                 needUpdate = True;
                 self.__albums.append({
-                    'artist' : musician['name'],
+                    'artist' : re.sub(r'\([^)]*\)', '', musician['name']),
                     'title' : album['title'],
                     'releaseYmd' : album['releaseYmd'],
                     'image' : album['imgList'][4]['url'],
@@ -35,7 +37,6 @@ class UpdateMusician:
             if needUpdate:
                 musician['recent'] = albums['data']['list'][0]['id']
                 self.__musicians.append(musician)
-            break
 
 
     def __getTracks(self, album, musicianName):
@@ -51,11 +52,11 @@ class UpdateMusician:
             artists = []
 
             for musician in item['artistList']:
-                artists.append (musician['name'])
+                artists.append (re.sub(r'\([^)]*\)', '', musician['name']))
 
-            value = '{0}. {1} - {2}'.format (str(n+1), item['name'], ', '.join(artists))
+            track = '{0} - {1} - {2}'.format (str(n+1), item['name'], ', '.join(artists))
 
-            result.append ({'value' : value})
+            result.append ({'value' : track})
 
         return result
     
@@ -76,13 +77,11 @@ class UpdateMusician:
                 'channel': 'C02TVSQ9XML',
                 'attachments': [
                     {
+                        'color': '#99f',
                         'mrkdwn_in': ['text'],
-                        'color': '#4929f2',
                         'title': album['artist'] + ' - ' + album['title'],
                         'thumb_url': album['image'],
-                        'fields': album['tracks'],
-                        'footer': 'FLO',
-                        'footer_icon': 'https://www.music-flo.com/favicon.ico'
+                        'fields': album['tracks']
                     }
                 ]
             }

@@ -19,20 +19,27 @@ class UpdateView(APIView):
         
         data = list(Musician.objects.values())
         obj = UpdateMusician(data)
+        musicians = obj.getMusicians()
+        response = []
         
         obj.SendMessage()
+        self.update(musicians)
         
-        return Response(obj.getMusicians())
+        for musician in musicians:
+            response.append (musician['name'])
+        
+        return Response(','.join(response) + ' updated');
     
-    def update (musician):
+    def update (self, musician):
+        
+        for item in musician:
+            model = Musician.objects.get(value=item['value'])
+            serializer = MusicianSerializer(model, data=item)
 
-        model = Musician.objects.get(value=musician['value'])
-        serializer = MusicanSerializer(model, data=musician)
+            if serializer.is_valid():
+                serializer.save()
 
-        if serializer.is_valid():
-            serializer.save()
-
-        print (serializer.errors)
+            print (serializer.errors)
     
 class MusicianView(APIView):
     
