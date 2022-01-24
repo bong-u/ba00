@@ -1,1 +1,1 @@
-web: gunicorn ba00.wsgi --log-file -
+web: gunicorn ba00.wsgi --log-file --timeout 180
