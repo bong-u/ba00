@@ -12,8 +12,8 @@ from .slack import UpdateMusician
 import requests, json
 
 class UpdateView(APIView):
-    # authentication_classes = [TokenAuthentication]
-    # permissions_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    permissions_classes = [IsAuthenticated]
 
     def post(self, req):
         
@@ -44,7 +44,7 @@ class UpdateView(APIView):
 class MusicianView(APIView):
     
     # authentication_classes = [TokenAuthentication]
-    # permissions_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'Musician.html'
@@ -56,13 +56,12 @@ class MusicianView(APIView):
 class SearchView(APIView):
     
     # authentication_classes = [TokenAuthentication]
-    # permissions_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'SearchMusician.html'
     
     def get(self, req):
-        
         query = req.GET.get('q')
         
         if query:
@@ -92,6 +91,9 @@ class SearchView(APIView):
         return response
 
 class AddMusicianView(APIView):
+    
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     
     def post(self, req):
         serializer = MusicianSerializer(data=req.data)

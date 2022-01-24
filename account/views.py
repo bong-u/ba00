@@ -1,12 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-from rest_framework.renderers import TemplateHTMLRenderer
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-
-from django.http import HttpResponse
 
 from . import models
 
@@ -21,7 +18,8 @@ class SignUpView(APIView):
         
         token = Token.objects.create(user=user)
         
-        return Response({'Token' : token.key})
+        return Response({'token' : token.key})
+
 
 class AuthView(APIView):
     
@@ -33,6 +31,6 @@ class AuthView(APIView):
             token.delete()
             token = Token.objects.create(user=user)
             
-            return Response({"Token": token.key})
+            return Response({'token': 'token '+token.key})
         else:
             return Response(status=401)

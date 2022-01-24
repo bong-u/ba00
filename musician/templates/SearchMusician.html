@@ -14,6 +14,13 @@
 	</head>
 	
 	<body>
+		<form id="loginForm" onsubmit="loginProc(event);">
+			<input type="text" name="id" />
+			<input type="password" name="password" />
+			<input id="loginButton" type="submit" value="login" />
+		</form>
+		<p id='welcome' style="display:none;"></p>
+		<span id='token' style="display:none;"></span>
 		
 		<form id="search_form" src="/musician/search/" method="GET">
 			<input type="search" name="q">
@@ -50,20 +57,61 @@
 	}
 	
 	function addButtonClicked(e) {
-		const result = {{result|safe}}
+		const objects = {{result|safe}};
 		const index = e.target.getAttribute('index');
-		
+		const token = document.getElementById('token').innerHTML;
+	
 		fetch ("/musician/add/", {
 			method: "POST",
-			headers: {'Content-Type': 'application/json'}, 
-			body: JSON.stringify(result[index])
+			headers: {'Content-Type': 'application/json', 'Authorization': token}, 
+			body: JSON.stringify(objects[index])
 		})
 		.then (res => {
 			if (res.status == 201)
 				alert ('Musician added successfully.')
+			else if (res.status == 401)
+				alert ('Login is required.')
 			else
 				alert ('Faild to add musician.')
 			console.log(res);
+		});
+	}
+	
+	function loginProc(e) {
+		e.preventDefault();
+		const formData = new FormData(document.getElementById('loginForm'));
+		const id = formData.get('id');
+		const pw = formData.get('password');
+		
+		const body = {
+			id: formData.get('id'),
+			password: formData.get('password')
+		};
+		const headers = {
+			'Content-type': 'application/json'
+		};
+		
+		fetch('/auth/', { method:'post', body:JSON.stringify(body), headers:headers })
+		.then(function (res) {
+			if (res.ok)
+				return res.json();
+
+			return Promise.reject(res)
+		})
+		.then(function (data) {
+			const token = data.token;
+
+			document.getElementById('loginForm').style.display = 'none';
+
+			document.getElementById('welcome').style.display = 'block';
+			document.getElementById('welcome').innerHTML = 'welcome ' + body.id + '!';
+			document.getElementById('token').innerHTML = token;
+		})
+		.catch(function (err) {
+			if (err.status == 401)
+				alert('login faild');
+			else
+				console.warn('Something went wrong.', err);
 		});
 	}
 </script>
