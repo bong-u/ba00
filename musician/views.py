@@ -22,7 +22,7 @@ class UpdateView(APIView):
         musicians = obj.getMusicians()
         response = []
         
-        #obj.SendMessage()
+        obj.SendMessage()
         self.update(musicians)
         
         for musician in musicians:
