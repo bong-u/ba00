@@ -27,7 +27,7 @@ SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['ba00-django.run.goorm.io']
+ALLOWED_HOSTS = ['ba00-django.run.goorm.io', 'ba00.herokuapp.com']
 
 # Application definition
 
