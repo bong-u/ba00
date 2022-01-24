@@ -31,7 +31,7 @@ class UpdateMusician:
                     'title' : album['title'],
                     'releaseYmd' : album['releaseYmd'],
                     'image' : album['imgList'][4]['url'],
-                    'tracks' : self.__getTracks(str(album['id']), musician['name'])
+                    # 'tracks' : self.__getTracks(str(album['id']), musician['name'])
                 })
 
             if needUpdate:
